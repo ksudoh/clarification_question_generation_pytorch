@@ -37,27 +37,27 @@ def main(args):
                               # args.max_post_len, args.max_ques_len, args.max_ans_len, count=args.batch_size*2)
                               args.max_post_len, args.max_ques_len, args.max_ans_len)
 
-    print 'No. of train_data %d' % len(train_data)
-    print 'No. of test_data %d' % len(test_data)
+    print('No. of train_data %d' % len(train_data))
+    print('No. of test_data %d' % len(test_data))
     run_model(train_data, test_data, word_embeddings, word2index, index2word, args)
 
 
 def run_model(train_data, test_data, word_embeddings, word2index, index2word, args):
-    print 'Preprocessing train data..'
+    print('Preprocessing train data..')
     tr_id_seqs, tr_post_seqs, tr_post_lens, tr_ques_seqs, tr_ques_lens, \
         tr_post_ques_seqs, tr_post_ques_lens, tr_ans_seqs, tr_ans_lens = preprocess_data(train_data, word2index,
                                                                                          args.max_post_len,
                                                                                          args.max_ques_len,
                                                                                          args.max_ans_len)
 
-    print 'Preprocessing test data..'
+    print('Preprocessing test data..')
     te_id_seqs, te_post_seqs, te_post_lens, te_ques_seqs, te_ques_lens, \
         te_post_ques_seqs, te_post_ques_lens, te_ans_seqs, te_ans_lens = preprocess_data(test_data, word2index,
                                                                                          args.max_post_len,
                                                                                          args.max_ques_len,
                                                                                          args.max_ans_len)
 
-    print 'Defining encoder decoder models'
+    print('Defining encoder decoder models')
     q_encoder = EncoderRNN(HIDDEN_SIZE, word_embeddings, n_layers=2, dropout=DROPOUT)
     q_decoder = AttnDecoderRNN(HIDDEN_SIZE, len(word2index), word_embeddings, n_layers=2)
 
@@ -72,7 +72,7 @@ def run_model(train_data, test_data, word_embeddings, word2index, index2word, ar
         a_decoder = a_decoder.to(device)
 
     # Load encoder, decoder params
-    print 'Loading encoded, decoder params'
+    print('Loading encoded, decoder params')
     q_encoder.load_state_dict(torch.load(args.q_encoder_params))
     q_decoder.load_state_dict(torch.load(args.q_decoder_params))
     a_encoder.load_state_dict(torch.load(args.a_encoder_params))
@@ -108,7 +108,7 @@ def run_model(train_data, test_data, word_embeddings, word2index, index2word, ar
         baseline_model.to(device)
 
     # Load utility calculator model params
-    print 'Loading utility model params'
+    print('Loading utility model params')
     context_model.load_state_dict(torch.load(args.context_params))
     question_model.load_state_dict(torch.load(args.question_params))
     answer_model.load_state_dict(torch.load(args.answer_params))
@@ -164,7 +164,7 @@ def run_model(train_data, test_data, word_embeddings, word2index, index2word, ar
                          print_rl_loss_avg, print_u_pred_avg, print_u_b_pred_avg)
         print(print_summary)
 
-        print 'Saving RL model params'
+        print('Saving RL model params')
         torch.save(q_encoder.state_dict(), args.q_encoder_params + '.' + args.model + '.epoch%d' % epoch)
         torch.save(q_decoder.state_dict(), args.q_decoder_params + '.' + args.model + '.epoch%d' % epoch)
         torch.save(a_encoder.state_dict(), args.a_encoder_params + '.' + args.model + '.epoch%d' % epoch)
@@ -209,7 +209,7 @@ if __name__ == "__main__":
     argparser.add_argument("--batch_size", type = int, default=128)
     argparser.add_argument("--model", type=str)
     args = argparser.parse_args()
-    print args
-    print ""
+    print(args)
+    print("")
     main(args)
 
