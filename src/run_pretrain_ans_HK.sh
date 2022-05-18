@@ -1,12 +1,17 @@
 #!/bin/bash
 
+myself=$(readlink -f $0)
+SCRIPT_DIR=$(dirname ${myself})
+BASEDIR=$(dirname ${SCRIPT_DIR})
+
 SITENAME=Home_and_Kitchen
 
-CQ_DATA_DIR=clarification_question_generation_pytorch/$SITENAME
-SCRIPT_DIR=clarification_question_generation_pytorch/src
-EMB_DIR=clarification_question_generation_pytorch/embeddings/$SITENAME
+CQ_DATA_DIR=${BASEDIR}/data/$SITENAME
+EMB_DIR=${BASEDIR}/data/embeddings/$SITENAME
 
-PARAMS_DIR=$CQ_DATA_DIR
+PARAMS_DIR=${BASEDIR}/work/$SITENAME/pretrain
+if test ! -d ${PARAMS_DIR} ; then mkdir -p ${PARAMS_DIR} ; fi
+
 
 python $SCRIPT_DIR/main.py    --train_context $CQ_DATA_DIR/train_context.txt \
                                     --train_ques $CQ_DATA_DIR/train_ques.txt \
