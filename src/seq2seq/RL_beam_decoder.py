@@ -82,8 +82,8 @@ def evaluate_beam_batch(input_seqs, input_lens, encoder, decoder,
             indices[b] = torch.index_select(beam_vocab_idx[b], 0, topi[b])
             backtrack_seqs[b, :, t] = indices[b]
             for k in range(BEAM_SIZE):
-                prev_decoder_hiddens[k, :, b, :] = decoder_hiddens[topi[b][k] / BEAM_SIZE][:, b, :]
-                backtrack_seqs[b, k, :t] = prev_backtrack_seqs[b, topi[b][k] / BEAM_SIZE, :t]
+                prev_decoder_hiddens[k, :, b, :] = decoder_hiddens[topi[b][k] // BEAM_SIZE][:, b, :]
+                backtrack_seqs[b, k, :t] = prev_backtrack_seqs[b, topi[b][k] // BEAM_SIZE, :t]
         prev_backtrack_seqs = backtrack_seqs
 
     decoded_seqs = [[None]*batch_size]*BEAM_SIZE
@@ -108,7 +108,7 @@ def evaluate_beam_batch(input_seqs, input_lens, encoder, decoder,
 def evaluate_beam(word2index, index2word, encoder, decoder, id_seqs, input_seqs, input_lens, output_seqs, output_lens,
                   batch_size, max_out_len, out_fname):
     total_loss = 0.
-    n_batches = len(input_seqs) / batch_size
+    n_batches = len(input_seqs) // batch_size
 
     encoder.eval()
     decoder.eval()
@@ -194,8 +194,8 @@ def evaluate_beam(word2index, index2word, encoder, decoder, id_seqs, input_seqs,
                 indices[b] = torch.index_select(beam_vocab_idx[b], 0, topi[b])
                 backtrack_seqs[b, :, t] = indices[b]
                 for k in range(BEAM_SIZE):
-                    prev_decoder_hiddens[k, :, b, :] = decoder_hiddens[topi[b][k]/decoder.output_size][:, b, :]
-                    backtrack_seqs[b, k, :t] = prev_backtrack_seqs[b, topi[b][k]/decoder.output_size, :t]
+                    prev_decoder_hiddens[k, :, b, :] = decoder_hiddens[topi[b][k]//decoder.output_size][:, b, :]
+                    backtrack_seqs[b, k, :t] = prev_backtrack_seqs[b, topi[b][k]//decoder.output_size, :t]
             prev_backtrack_seqs = backtrack_seqs
 
         if backtrack_seqs is not None:

@@ -9,7 +9,7 @@ SITENAME=Home_and_Kitchen
 CQ_DATA_DIR=${BASEDIR}/data/$SITENAME
 EMB_DIR=${BASEDIR}/data/embeddings/$SITENAME
 
-PARAMS_DIR=${BASEDIR}/work/$SITENAME/pretrain
+PARAMS_DIR=${BASEDIR}/work/$SITENAME
 if test ! -d ${PARAMS_DIR} ; then mkdir -p ${PARAMS_DIR} ; fi
 
 
